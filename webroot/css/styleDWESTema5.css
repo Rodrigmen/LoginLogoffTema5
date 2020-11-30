@@ -1,0 +1,227 @@
+*{
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: Copperplate Gothic Light, sans-serif;
+    font-weight: bold;
+}
+#titulo{
+    margin-top: 35px;
+    text-transform: uppercase;
+    display: block;
+    font-size: 35px;
+    color: black;
+    text-align: center;
+    background: #A9C6FF;
+    position: absolute;
+    padding: 75px 100px;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%,-50%);
+    border-radius: 20px; 
+
+
+}
+body{
+    background: #A9C6FF;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+header{
+    width: 100%;
+}
+
+#introduccion{
+    text-align: justify;
+    width: 400px;
+    height: 250px;
+    float:left;
+    margin-left: 20%;
+    margin-top: 5%;
+    border-bottom: 7px groove #000000;
+    border-radius: 7px;
+
+}
+#intro{
+    margin-top: 35%;
+}
+
+#contenedorimagen{
+    float:right;
+    margin-right: 20%;
+    margin-top: 5%;
+
+}
+
+#img{
+    width: 350px;
+    height: 350px;
+}
+
+.navegacion{
+    padding-top: 75px;
+    width: 1000px;
+    margin: 30px auto;
+    border-bottom: 5px solid black;
+    border-radius: 10px;
+}
+
+.navegacion ul{
+    list-style: none;
+}
+
+.menu > li{
+    position: relative;
+    display: inline-block;
+}
+
+.menu > li > a{
+    display: block;
+    padding: 15px 20px;
+    color: black;
+    text-decoration: none;
+}
+
+.menu li a:hover{
+    color: white;
+    font-size: 18px;
+    transition: all .3s;
+}
+.menu #ghost{
+    font-size: 18px;
+    color:#A9C6FF;
+    cursor:default;
+}
+
+#inicio{
+    height: 22px;
+    width: 22px;
+    transition: 0.3s;
+}
+
+#inicio:hover{
+    filter: drop-shadow(0 2px 5px white);
+}
+/* Submenu*/
+
+.submenu{
+    position: absolute;
+    background: #333333;
+    width: 150%;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1.5s;
+    border-radius: 7px;
+}
+
+.submenu li a{
+    display: block;
+    padding: 15px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.menu li:hover .submenu{
+    visibility: visible;
+    opacity: 1;
+}
+
+#ctabla{
+    overflow:auto;
+    overflow-x:hidden;
+    height:500px;
+}
+
+
+#ctabla tr:hover{
+    background: linear-gradient(to right, white 0%, 
+        rgba(169,198,255,0.69) 22%, rgba(169,198,255,0.11) 64%);
+
+}
+#ctabla #marcatabla:hover{
+    background: #A9C6FF;
+}
+#ejercicios{
+
+    margin: auto;
+    border-spacing: 40px;
+    overflow: scroll;
+}
+
+.enunciado{
+    padding-left: 10%;
+    padding-right: 100px;
+    height: 50px;
+}
+
+#ejercicios .imgejer{
+    width: 30px;
+    height:30px;
+    transition:0.3s;
+}
+
+#ejercicios .imgejer:hover{
+    width: 32px;
+    height:32px;
+    filter: drop-shadow(0 2px 5px white)
+}
+
+#ejercicios .iconos{
+    width: 40px;
+    height: 40px;
+}
+
+#ejercicios .casper{
+    width: 35px;
+    height:35px;
+    color:#A9C6FF;
+    cursor:default;
+}
+
+
+
+/*-----------FOOTER-----------*/    
+footer{
+    background: #A9C6FF;
+    color: black;
+    position: fixed;
+    height: 75px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+footer ul li{
+    display:inline;
+    list-style: none;
+    padding-left:3px;
+    padding-right:3px;
+}
+
+footer ul li #imggit{
+    width:40px;
+    height:40px;
+    transition: 0.5s;
+}
+
+footer ul li #imggit:hover{
+    filter: drop-shadow(0 2px 5px white);
+}
+
+.programa{
+    text-align: center;
+}
+
+.programa input{
+    margin: 50px;
+    width: 200px;
+}
+
+.programa input:hover{
+    background-color: black;
+    color:white;
+}
