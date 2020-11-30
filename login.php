@@ -91,11 +91,10 @@
                 ?>
                 <form id="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <fieldset>
-                        <legend>Datos necesarios:</legend>
 
                         <!-----------------NOMBRE----------------->
                         <div class="required">
-                            <label for="nombre">Nombre: </label>
+                            <label for="nombre">Nombre:</label>
                             <input type="text" name="nombre"  placeholder="Nombre de usuario" value="<?php
                             //si no hay error y se ha insertado un valor en el campo con anterioridad
                             if ($aErrores['eNombre'] == null && isset($_POST['nombre'])) {
@@ -119,8 +118,8 @@
 
                         <!-----------------PASSWORD----------------->
                         <div class="required">
-                            <label for="password">Contraseña: </label>
-                            <input type="password" name="password" value="<?php
+                            <label for="password">Contraseña:</label>
+                            <input type="password" name="password" placeholder="Contraseña del usuario" value="<?php
                             //si no hay error y se ha insertado un valor en el campo con anterioridad
                             if ($aErrores['ePassword'] == null && isset($_POST['password'])) {
 
@@ -140,7 +139,7 @@
                             }
                             ?>
                         </div>
-                        <input type="submit" name="enviar" value="Entrar" />
+                        <input type="submit" name="enviar" value="Siguiente" />
                     </fieldset>
                 </form>
                 <?php
@@ -154,5 +153,15 @@
         ?>
 
     </body>
+    <footer>
+        <ul>
+            <li>&copy2020-2021 | Rodrigo Robles Miñambres</li>
+            <li>
+                <a target="_blank" href="https://github.com/Rodrigmen/LoginLogoffTema5/tree/master">
+                    <img id="imggit" title="GitHub" src="webroot/css/images/github.png"  alt="GITHUB">
+                </a>
+            </li>
+        </ul>            
+    </footer>
 
 </html>       

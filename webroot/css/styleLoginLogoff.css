@@ -9,13 +9,14 @@
 }
 /*HEADER -> TITULO E ICONO DE VOLVER ATRÁS*/
 header{
-    padding: 30px;
+    padding: 2%;
     text-align: center;
     background: #A9C6FF;
 }
 h1{
+    font-size: 4vh;
     color:white;
-    border-bottom: 5px solid black;
+    border-bottom: 1vh solid black;
 }
 header img{
     float:left;
@@ -23,8 +24,8 @@ header img{
 }
 /*Icono de flecha y GIT*/
 .imgprinc{
-    width:40px;
-    height:40px;
+    width:2.5%;
+    height:2.5%;
     transition: 0.5s;
 
 }
@@ -45,26 +46,31 @@ fieldset{
     border:0;
 
 }
+
 form{
-    width: 1000px;
+    font-size: 2vh;
+    width: 50%;
     border-radius:10px;
-    margin: 10px auto;
+    margin: 8% auto;
     background-color:#ccc;
 }
 
-form label{  
-    padding: 10px;
+form label{ 
+    margin-left: 10%;
+    width: 20%;
+    padding: 2%;
     font-weight:bold;
     display:inline-block;
 }
 form input{
+    font-size: 2vh;
     text-align: center;
-    padding:3px 10px;
-    margin:20px 0;
+    padding:1% 5%;
+    margin:2% 0;
     display:inline-block;
 }
-form input[type="text"]{
-    width:300px;
+form input[type="text"], form input[type="password"] {
+    width:50%;
     border-radius:3px;
 
 }
@@ -77,132 +83,42 @@ input:focus {
 input:placeholder-shown {
     background-color: #FAFBFC;
 }
-form input[name="importar"], form input[name="exportar"] {
-    padding:3px 10px;
-    margin:20px 10px;
-    float:right;
-} 
-form input[name="Insertar Departemento"], form input[name="Ver Código"] {
+
+form input[name="enviar"] {
     text-decoration: underline white; 
     width:100%;
-    height: 30px;
-    margin-top:10px;
+    height: 2%;
+    margin-top:1%;
     border-radius:5px;
     display:block;
     color:#fff;
     background-color:#000;
     border:none;
-    margin-bottom: 5px;
+    margin-bottom: 1%;
 } 
 
-form input[type="button"]:hover{
+form input[type="submit"]:hover{
     cursor:pointer;
     color:black;
     background: white;
 }
-form input[name="Insertar Departemento"]{
-    text-decoration: underline green; 
-}
-form input[name="Insertar Departemento"]:hover{
-    cursor:pointer;
-    background-color: green;
-    color:white;
-}
 .errores{
+    font-size: 2vh;
+    text-align: center;
     color:red;
-    float:right;
-    margin:25px auto;
+    margin:1% auto;
 }
 .required{
     background-color: #ADB9C5;
-    border-radius:10px;
-}
-.required select{
-    border: 0;
-    font-size: 14px;
-    height: 30px;
-    padding: 5px;
-    width: 250px;
-}
-
-
-/*TABLA DE RESULTADOS*/
-table{
-    width: 75%;
-    margin: auto;
-    padding: auto;
-    border-spacing:0;
-}
-
-thead, tbody { 
-    display: block;
-}
-tbody{
-    overflow:auto;
-    overflow-x:hidden;
-    height:350px;
-}
-
-th{  
-    width: 20%;
-    padding: 1%;
-    padding-right: 20px;
-    font-weight: bold;
-    text-align: center;
-    
-}
-th:nth-child(1){
-    width: 13%;
-}
-th:nth-child(2), th:nth-child(4), th:nth-child(6), th:nth-child(8) {
-   width: 0.01%; 
-}
-thead{
-    background: white;
-}
-thead tr:hover{
-    background: white;
-}
-tr:hover{
-    background: linear-gradient(to right, white 0%, 
-        rgba(169,198,255,0.69) 22%, rgba(169,198,255,0.11) 64%);
-    border-bottom-color: white;
-
-}
-td{
-    padding: 15px;
-    text-align: center;
-    border-bottom: 3px solid black;
-    width: 15%;
-}
-td:first-child{
-    width: 10%;
-}
-
-
-td:nth-child(n+3){
-    width: 15%;
-}
-td:nth-child(n+5){
-    width: 1%;
-}
-td:nth-child(n+5):hover {
-    border-bottom-color: white; 
-}
-.imgejer{
-    width:30px;
-    height:30px;
-}
-.imgejer:hover{
-    filter: drop-shadow(0 2px 5px white);
 }
 
 /*-----------FOOTER-----------*/
 footer{
+    font-size: 3vh;
     background: #A9C6FF;
     color: black;
     position: fixed;
-    height: 50px;
+    height: 10%;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -217,8 +133,8 @@ footer ul li{
 }
 
 footer ul li #imggit{
-    width:40px;
-    height:40px;
+    width:3%;
+    height:3%;
     transition: 0.5s;
 }
 
