@@ -103,7 +103,7 @@ form input[type="submit"]:hover{
     background: white;
 }
 .errores{
-    font-size: 2vh;
+    font-size: 2.5vh;
     text-align: center;
     color:red;
     margin:1% auto;
