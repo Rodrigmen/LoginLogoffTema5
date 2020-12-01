@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Formulario para logearte
@@ -63,15 +62,27 @@ try {
         //Se ejecuta la consulta preparada
         $buscarUsuario->execute();
 
-        $NumUsuarios = $buscarUsuario->rowCount();
-        if ($NumUsuarios === 1) {
-            $oUsuario = $buscarUsuario->fetchObject();
+        $NumUsuarios = $buscarUsuario->rowCount(); //se suenta el número de resultados
 
+        if ($NumUsuarios === 1) { //si existe solo un usuario con ese código y esa contraseña, es correcto
+            $oUsuario = $buscarUsuario->fetchObject(); //se recorre el resultado como un objeto
+            //se sacan los datos del objeto y se insertan en la sesión actual (actúa como un array asociativo)
             $_SESSION['codigo'] = $oUsuario->T01_CodUsuario;
             $_SESSION['descripcion'] = $oUsuario->T01_DescUsuario;
             $_SESSION['perfil'] = $oUsuario->T01_Perfil;
+            $_SESSION['numconex'] = $oUsuario->T01_NumConexiones;
+            
+            $consultaActualizar = "UPDATE T01_Usuario SET T01_NumConexiones = T01_NumConexiones + 1 WHERE (T01_CodUsuario = :codigo)";
+            $actualizarNumConex = $oConexionPDO->prepare($consultaActualizar);
+            $actualizarNumConex->bindParam(':codigo', $oUsuario->T01_CodUsuario);
+            $actualizarNumConex->execute();
+            
+            $_SESSION['ultimaconex'] = $oUsuario->T01_FechaHoraUltimaConexion;
+            
+            
+
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
-        } else {
+        } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal
         }
         $buscarUsuario->closeCursor();
@@ -105,61 +116,61 @@ try {
                         <div class="required">
                             <label for="nombre">Nombre:</label>
                             <input type="text" name="nombre"  placeholder="Nombre de usuario" value="<?php
-        //si no hay error y se ha insertado un valor en el campo con anterioridad
-        if ($aErrores['eNombre'] == null && isset($_POST['nombre'])) {
+                            //si no hay error y se ha insertado un valor en el campo con anterioridad
+                            if ($aErrores['eNombre'] == null && isset($_POST['nombre'])) {
 
-            //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
-            //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
-            echo $_POST['nombre'];
-        }
-        ?>"/>
+                                //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
+                                //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
+                                echo $_POST['nombre'];
+                            }
+                            ?>"/>
 
-                                   <?php
-                                   //si hay error en este campo
-                                   if ($aErrores['eNombre'] != NULL) {
-                                       echo "<div class='errores'>" .
-                                       //se muestra dicho error
-                                       $aErrores['eNombre'] .
-                                       '</div>';
-                                   }
-                                   ?>
+                            <?php
+                            //si hay error en este campo
+                            if ($aErrores['eNombre'] != NULL) {
+                                echo "<div class='errores'>" .
+                                //se muestra dicho error
+                                $aErrores['eNombre'] .
+                                '</div>';
+                            }
+                            ?>
                         </div>
 
                         <!-----------------PASSWORD----------------->
                         <div class="required">
                             <label for="password">Contraseña:</label>
                             <input type="password" name="password" placeholder="Contraseña del usuario" value="<?php
-                    //si no hay error y se ha insertado un valor en el campo con anterioridad
-                    if ($aErrores['ePassword'] == null && isset($_POST['password'])) {
+                            //si no hay error y se ha insertado un valor en el campo con anterioridad
+                            if ($aErrores['ePassword'] == null && isset($_POST['password'])) {
 
-                        //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
-                        //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
-                        echo $_POST['password'];
-                    }
-                                   ?>"/>
+                                //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
+                                //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
+                                echo $_POST['password'];
+                            }
+                            ?>"/>
 
-                                   <?php
-                                   //si hay error en este campo
-                                   if ($aErrores['ePassword'] != NULL) {
-                                       echo "<div class='errores'>" .
-                                       //se muestra dicho error
-                                       $aErrores['ePassword'] .
-                                       '</div>';
-                                   }
-                                   ?>
+                            <?php
+                            //si hay error en este campo
+                            if ($aErrores['ePassword'] != NULL) {
+                                echo "<div class='errores'>" .
+                                //se muestra dicho error
+                                $aErrores['ePassword'] .
+                                '</div>';
+                            }
+                            ?>
                         </div>
                         <input type="submit" name="enviar" value="Siguiente" />
                     </fieldset>
                 </form>
-        <?php
-    }
-} catch (PDOException $excepcionPDO) {
-    echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //Muestra el mesaje de error
-    echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; // Muestra el codigo del error
-} finally {
-    unset($oConexionPDO); //destruimos el objeto  
-}
-?>
+                <?php
+            }
+        } catch (PDOException $excepcionPDO) {
+            echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //Muestra el mesaje de error
+            echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; // Muestra el codigo del error
+        } finally {
+            unset($oConexionPDO); //destruimos el objeto  
+        }
+        ?>
 
     </body>
     <footer>
