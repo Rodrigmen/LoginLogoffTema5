@@ -16,6 +16,8 @@ if (!isset($_SESSION['codigo'])) {
         header('Location: ../login.php');
     } else if (isset($_POST['detalle'])) {
         header('Location: detalle.php');
+    } else if (isset($_POST['recargar'])) {
+        header('Location: programa.php');
     }
 }
 ?>
@@ -31,10 +33,24 @@ if (!isset($_SESSION['codigo'])) {
     <body>
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
-            <h3>¡Bienvenido/a <span class="respuesta"><?php echo $_SESSION['descripcion']; ?></span>!</h3>
-            <?php
-            if ($_SESSION['perfil'] === "admin") {
-                ?>
+            <h3>¡<?php
+                switch ($_COOKIE["language"]) {
+
+                    case "spanish":
+                        ?>
+                        Bienvenido/a  
+                        <?php
+                        break;
+                    case "portuguese":
+                        ?>
+                        Bem-vinda 
+                        <?php
+                        break;
+                }
+                ?> <span class="respuesta"><?php echo $_SESSION['descripcion']; ?></span>!</h3>
+                <?php
+                if ($_SESSION['perfil'] === "admin") {
+                    ?>
                 <h3><span class="respuesta">Eres el admin</span></h3>
                 <?php
             } else {
@@ -61,7 +77,18 @@ if (!isset($_SESSION['codigo'])) {
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
+                <input type="submit" name="recargar" value="Recargar"/><br>
+
+                <label for="idioma">Selecciona el idioma:</label>
+                <select name="idioma" id="idioma">
+                    <option value="opciones" >Idiomas</option>
+                    <option value="<?php setcookie("language", "spanish", time() + 3600); ?>" >Español</option>
+                    <option value="<?php setcookie("language", "portuguese", time() + 3600); ?>">Portugés</option>                   
+                </select>
             </form>
+
+
+
         </div>
     </body>
     <footer>
