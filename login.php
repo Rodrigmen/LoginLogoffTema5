@@ -66,21 +66,24 @@ try {
 
         if ($NumUsuarios === 1) { //si existe solo un usuario con ese código y esa contraseña, es correcto
             $oUsuario = $buscarUsuario->fetchObject(); //se recorre el resultado como un objeto
-            //se sacan los datos del objeto y se insertan en la sesión actual (actúa como un array asociativo)
+            //se sacan los datos del objeto [de la base de datos] y se insertan en la sesión actual (actúa como un array asociativo)
+            //NOTA: SE INSERTAN PRIMERO EN LA SESIÓN LOS DATOS DE LA BASE DE DATOS Y LUEGO SE ACTULIZAN, COGIENDO LOS DATOS ANTERIORES A LA ACTUALIZACIÓN
             $_SESSION['codigo'] = $oUsuario->T01_CodUsuario;
             $_SESSION['descripcion'] = $oUsuario->T01_DescUsuario;
             $_SESSION['perfil'] = $oUsuario->T01_Perfil;
             $_SESSION['numconex'] = $oUsuario->T01_NumConexiones;
+            $_SESSION['ultimaconex'] = $oUsuario->T01_FechaHoraUltimaConexion;
 
+            //Actualizar el número de conexiones en la BASE DE DATOS
             $consultaActualizar = "UPDATE T01_Usuario SET T01_NumConexiones = T01_NumConexiones + 1 WHERE (T01_CodUsuario = :codigo)";
             $actualizarNumConex = $oConexionPDO->prepare($consultaActualizar);
             $actualizarNumConex->bindParam(':codigo', $oUsuario->T01_CodUsuario);
             $actualizarNumConex->execute();
 
+            //Actualizar la fecha de la última conexion en la BASE DE DATOS
             $fechaActual = new DateTime();
             $tiempo = $fechaActual->getTimestamp();
 
-            $_SESSION['ultimaconex'] = $oUsuario->T01_FechaHoraUltimaConexion;
             $consultaActualizar2 = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
             $actualizarFecha = $oConexionPDO->prepare($consultaActualizar2);
             $actualizarFecha->bindParam(':codigo', $_SESSION['codigo']);
