@@ -1,25 +1,8 @@
 <?php
 session_start();
 if (isset($_POST['salir'])) {
-    require_once '../config/confDB.php';
-    try {
-        $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); //creo el objeto PDO con las constantes iniciadas en el archivo datosBD.php
-        $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $fechaActual = new DateTime();
-        $tiempo = $fechaActual->getTimestamp();
-        
-        $consultaActualizar = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
-        $actualizarFecha = $oConexionPDO->prepare($consultaActualizar);
-        $actualizarFecha->bindParam(':codigo', $_SESSION['codigo']);
-        $actualizarFecha->execute();
-    } catch (PDOException $excepcionPDO) {
-        echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //Muestra el mesaje de error
-        echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; // Muestra el codigo del error
-    } finally {
-        unset($oConexionPDO); //destruimos el objeto  
-    }
-    
-    session_destroy();
+    session_destroy(); //Destrucción de la sesión
+    //Destrucción de las cookies
     $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
     foreach ($cookies as $cookie) {
         $parts = explode('=', $cookie);

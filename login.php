@@ -71,15 +71,20 @@ try {
             $_SESSION['descripcion'] = $oUsuario->T01_DescUsuario;
             $_SESSION['perfil'] = $oUsuario->T01_Perfil;
             $_SESSION['numconex'] = $oUsuario->T01_NumConexiones;
-            
+
             $consultaActualizar = "UPDATE T01_Usuario SET T01_NumConexiones = T01_NumConexiones + 1 WHERE (T01_CodUsuario = :codigo)";
             $actualizarNumConex = $oConexionPDO->prepare($consultaActualizar);
             $actualizarNumConex->bindParam(':codigo', $oUsuario->T01_CodUsuario);
             $actualizarNumConex->execute();
-            
+
+            $fechaActual = new DateTime();
+            $tiempo = $fechaActual->getTimestamp();
+
             $_SESSION['ultimaconex'] = $oUsuario->T01_FechaHoraUltimaConexion;
-            
-            
+            $consultaActualizar2 = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
+            $actualizarFecha = $oConexionPDO->prepare($consultaActualizar2);
+            $actualizarFecha->bindParam(':codigo', $_SESSION['codigo']);
+            $actualizarFecha->execute();
 
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
