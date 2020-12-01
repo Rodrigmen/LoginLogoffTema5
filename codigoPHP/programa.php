@@ -16,8 +16,24 @@ if (!isset($_SESSION['codigo'])) {
         header('Location: ../login.php');
     } else if (isset($_POST['detalle'])) {
         header('Location: detalle.php');
-    } else if (isset($_POST['recargar'])) {
-        header('Location: programa.php');
+    } else if (isset($_POST['recargar'])) { //Comprobamos que el usuario haya enviado el formulario (se recarga la página)
+        if ($_POST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
+            setcookie("language", 'spanish'); //Creamos o cambiamos la cookie idioma al valor 'spanish'
+        }
+        if ($_POST['language'] == 'portuguese') {
+            setcookie("language", 'portuguese'); 
+        }
+        if ($_POST['language'] == 'italian') {
+            setcookie("language", 'italian'); 
+        }
+        if ($_POST['language'] == 'french') {
+            setcookie("language", 'french'); 
+        }
+        if ($_POST['language'] == 'english') {
+            setcookie("language", 'english'); 
+        }
+
+        header('location: programa.php'); //Volvemos a cargar el ejercicio01.php para que se recargue el valor de las cookies
     }
 }
 ?>
@@ -34,18 +50,21 @@ if (!isset($_SESSION['codigo'])) {
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
             <h3>¡<?php
-                switch ($_COOKIE["language"]) {
-
-                    case "spanish":
-                        ?>
-                        Bienvenido/a  
-                        <?php
-                        break;
-                    case "portuguese":
-                        ?>
-                        Bem-vinda 
-                        <?php
-                        break;
+                if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
+                    ?>Bienvenido/a  
+                    <?php
+                } else if ($_COOKIE["language"] === "portuguese") {
+                    ?>Bem-vinda 
+                    <?php
+                } else if ($_COOKIE["language"] === "italian") {
+                    ?>Benvenuto
+                    <?php
+                } else if ($_COOKIE["language"] === "french") {
+                    ?>Bienvenue
+                    <?php
+                } else if ($_COOKIE["language"] === "english") {
+                    ?>Welcome
+                    <?php
                 }
                 ?> <span class="respuesta"><?php echo $_SESSION['descripcion']; ?></span>!</h3>
                 <?php
@@ -72,23 +91,51 @@ if (!isset($_SESSION['codigo'])) {
                         echo $fechaFormateada;
                     }
                     ?>
-
                 </span></h3>          
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
                 <input type="submit" name="recargar" value="Recargar"/><br>
 
-                <label for="idioma">Selecciona el idioma:</label>
-                <select name="idioma" id="idioma">
-                    <option value="opciones" >Idiomas</option>
-                    <option value="<?php setcookie("language", "spanish", time() + 3600); ?>" >Español</option>
-                    <option value="<?php setcookie("language", "portuguese", time() + 3600); ?>">Portugés</option>                   
+                <label for="language">Selecciona el idioma:</label>
+                <select name="language" id="language">
+                    <option value="spanish" <?php
+                    if (isset($_COOKIE['language'])) {//si existe la cookie 'language'
+                        if ($_COOKIE['language'] === "spanish") {//Si el idioma almacenado es español
+                            echo 'selected'; //Será el valor seleccionado en nuestra lista una vez recargada la página
+                        }
+                    }
+                    ?>>Español</option>
+                    <option value="portuguese" <?php
+                    if (isset($_COOKIE['language'])) {
+                        if ($_COOKIE['language'] === "portuguese") {
+                            echo 'selected'; 
+                        }
+                    }
+                    ?>>Portugés</option>
+                    <option value="italian" <?php
+                    if (isset($_COOKIE['language'])) {
+                        if ($_COOKIE['language'] === "italian") {
+                            echo 'selected'; 
+                        }
+                    }
+                    ?>>Italiano</option>
+                    <option value="french" <?php
+                    if (isset($_COOKIE['language'])) {
+                        if ($_COOKIE['language'] === "french") {
+                            echo 'selected'; 
+                        }
+                    }
+                    ?>>Francés</option>
+                    <option value="english" <?php
+                    if (isset($_COOKIE['language'])) {
+                        if ($_COOKIE['language'] === "english") {
+                            echo 'selected';
+                        }
+                    }
+                    ?>>Inglés</option>  
                 </select>
             </form>
-
-
-
         </div>
     </body>
     <footer>
@@ -102,4 +149,3 @@ if (!isset($_SESSION['codigo'])) {
         </ul>            
     </footer>
 </html>  
-

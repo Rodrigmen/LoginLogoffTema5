@@ -89,7 +89,7 @@ try {
             $actualizarFecha->bindParam(':codigo', $_SESSION['codigo']);
             $actualizarFecha->execute();
 
-            setcookie("language", "spanish", time() + 3600);
+            setcookie("language", "spanish");
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal
