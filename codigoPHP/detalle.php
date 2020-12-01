@@ -1,3 +1,16 @@
+<?php
+/**
+ * Mostrar el contenido de las variables superglobales y phpinfo().
+ * 
+ * @version 1.0.0
+ * @since 30-11-2020
+ * @author Rodrigo Robles <rodrigo.robmin@educa.jcyl.es>
+ */
+session_start();
+if (!isset($_SESSION['codigo'])) {
+    header('Location: ../login.php');
+}
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -48,15 +61,6 @@
         <h2>$_SERVER</h2>
         <table>
             <?php
-            /**
-             * Mostrar el contenido de las variables superglobales y phpinfo().
-             * 
-             * @version 1.0.0
-             * @since 30-11-2020
-             * @author Rodrigo Robles <rodrigo.robmin@educa.jcyl.es>
-             */
-            session_start();
-
             foreach ($_SERVER as $apartado => $valor) {
                 echo '<tr> <td class="key">' . $apartado . '</td><td class="valor">' . $valor . '</td> </tr>';
             }
@@ -72,13 +76,16 @@
 
             if (isset($_COOKIE)) {
                 echo "<h2>$" . "_COOKIE</h2>";
-                print_r($_COOKIE) . "<br>";
+                echo '<table>';
+                foreach ($_COOKIE as $apartado3 => $valor3) {
+                    echo '<tr> <td class="key">' . $apartado3 . '</td><td class="valor">' . $valor3 . '</td> </tr>';
+                }
+                echo '</table><br>';
             }
 
             echo "<h2>PHPINFO</h2>";
             phpinfo();
             ?>
-
     </body>
 
 </html>   

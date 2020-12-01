@@ -1,18 +1,22 @@
 <?php
 session_start();
-if (isset($_POST['salir'])) {
-    session_destroy(); //Destrucción de la sesión
-    //Destrucción de las cookies
-    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
-    foreach ($cookies as $cookie) {
-        $parts = explode('=', $cookie);
-        $name = trim($parts[0]);
-        setcookie($name, '', time() - 1000);
-        setcookie($name, '', time() - 1000, '/');
-    }
+if (!isset($_SESSION['codigo'])) {
     header('Location: ../login.php');
-} else if (isset($_POST['detalle'])) {
-    header('Location: detalle.php');
+} else {
+    if (isset($_POST['salir'])) {
+        session_destroy(); //Destrucción de la sesión
+        //Destrucción de las cookies
+        $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+        foreach ($cookies as $cookie) {
+            $parts = explode('=', $cookie);
+            $name = trim($parts[0]);
+            setcookie($name, '', time() - 1000);
+            setcookie($name, '', time() - 1000, '/');
+        }
+        header('Location: ../login.php');
+    } else if (isset($_POST['detalle'])) {
+        header('Location: detalle.php');
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -44,7 +48,7 @@ if (isset($_POST['salir'])) {
                 <?php
             } else {
                 ?>
-                <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $_SESSION['numconex']+1; ?></span></h3>
+                <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $_SESSION['numconex'] + 1; ?></span></h3>
                 <h3>Última conexión: <span class="respuesta"><?php
                         $fecha = new DateTime();
                         $fecha->setTimestamp($_SESSION['ultimaconex']);
