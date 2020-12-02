@@ -3,10 +3,10 @@
  * Formulario para logearte
  * 
  * @version 1.0.0
- * @since 30-11-2020
+ * @since 02-11-2020
  * @author Rodrigo Robles <rodrigo.robmin@educa.jcyl.es>
  */
-require_once 'config/confDB.php';
+require_once 'config/confDB.php'; //requerimos una vez el archivo de configuración donde tenemos los datos necesarios para establecer la conexión con la base de datos
 try {
     $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); //creo el objeto PDO con las constantes iniciadas en el archivo datosBD.php
     $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //le damos este atributo a la conexión (la configuramos) para poder utilizar las excepciones
@@ -48,15 +48,17 @@ try {
     }
 
     if ($entradaOK) { //si el formulario esta bien rellenado
-        session_start();
-        //Creación de la consulta preparada
+        session_start(); // se inicia la sesión
+        //Creación de la consulta preparada (solo se cogen los datos necesarios para pasarlos a la sesion y con los que haremos próximas consultas)
         $consultaUsuario = "SELECT T01_CodUsuario, T01_FechaHoraUltimaConexion FROM T01_Usuario WHERE (T01_CodUsuario = :codigo) AND  (T01_Password  = :password)";
         //Preparación de la consulta preparada
         $buscarUsuario = $oConexionPDO->prepare($consultaUsuario);
 
+        //Creación de la contraseña mediante concatenación y el hash(codificación)
+        $HASHPassword = hash('sha256', $_POST['nombre'] . $_POST['password']);
+        
         //Insertamos los datos en la consulta preparada
         $buscarUsuario->bindParam(':codigo', $_POST['nombre']);
-        $HASHPassword = hash('sha256', $_POST['nombre'] . $_POST['password']);
         $buscarUsuario->bindParam(':password', $HASHPassword);
 
         //Se ejecuta la consulta preparada
@@ -71,22 +73,34 @@ try {
             $_SESSION['usuarioDAW218LogInLogOutTema5'] = $oUsuario->T01_CodUsuario;            
             $_SESSION['FechaHoraUltimaconexionAnterior'] = $oUsuario->T01_FechaHoraUltimaConexion;
 
-            //Actualizar el número de conexiones en la BASE DE DATOS
+            //Consulta preparada -> Actualizar el número de conexiones en la BASE DE DATOS
             $consultaActualizar = "UPDATE T01_Usuario SET T01_NumConexiones = T01_NumConexiones + 1 WHERE (T01_CodUsuario = :codigo)";
             $actualizarNumConex = $oConexionPDO->prepare($consultaActualizar);
             $actualizarNumConex->bindParam(':codigo', $oUsuario->T01_CodUsuario);
             $actualizarNumConex->execute();
 
-            //Actualizar la fecha de la última conexion en la BASE DE DATOS
-            $fechaActual = new DateTime();
-            $tiempo = $fechaActual->getTimestamp();
+            //Consulta preparada -> Actualizar la fecha de la última conexion en la BASE DE DATOS
+            $fechaActual = new DateTime(); //creamos una variable con la fecha actual
+            $tiempo = $fechaActual->getTimestamp(); //sacamos su timestamp
 
             $consultaActualizar2 = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
             $actualizarFecha = $oConexionPDO->prepare($consultaActualizar2);
             $actualizarFecha->bindParam(':codigo', $_SESSION['usuarioDAW218LogInLogOutTema5']);
             $actualizarFecha->execute();
 
-            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
+            /*----COOKIE-----*/
+            //creación de la cookie (su valor se pasara a 'programa.php' para identificar el idioma en el que aparecera la información)
+            //setcookie(nombre, valor, expires, path, domain, secure, options, httponly);
+            //name->nombre de la cookie
+            //valor->el valor de la cookie
+            //expires->el tiempo en que la cookie expira (0 = cuando se cierra la sesión)
+            //path->la ruta dentro del servidor en la que la cookie estará disponible
+            //domain->el (sub)dominio al que la cookie está disponible
+            //secure->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
+            //httponly->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
+            //NOTA: Si quieres mantener la misma cookie por varios archivos en diferentes directorios (como 'login.php' y 'programa.php') el path (ruta) y el domain (dominio) tienen que ser el mismo
+            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); 
+            
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal

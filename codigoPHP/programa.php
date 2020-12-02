@@ -1,9 +1,9 @@
 <?php
-session_start();
-if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
+session_start(); //se recupera la sesión
+if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) { //si la sesión no tiene información (es decir, no esta creada la sesión correctamente = no te has logeado), se devuelve automáticamente a la página de login
     header('Location: ../login.php');
-} else {
-    if (isset($_POST['salir'])) {
+} else { //sino
+    if (isset($_POST['salir'])) { //si ejecutamos el boton 'salir'
         session_destroy(); //Destrucción de la sesión
         //Destrucción de todas las cookies (esto es para que se borre la cookie creada al iniciar sesión)
         $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
@@ -13,11 +13,12 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
             setcookie($name, '', time() - 1000);
             setcookie($name, '', time() - 1000, '/');
         }
-        header('Location: ../login.php');
-    } else if (isset($_POST['detalle'])) {
-        header('Location: detalle.php');
-    } else if (isset($_REQUEST['language'])) { //Comprobamos que se cambie el idioma 
+        header('Location: ../login.php'); //volvemos a la página 'login.php'
+    } else if (isset($_POST['detalle'])) { //o si ejecutamos el boton 'detalle'
+        header('Location: detalle.php'); //nos vamos a la página 'detalle.php'
+    } else if (isset($_REQUEST['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
         if ($_REQUEST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
+            //se definen todos los aspectos de la cookie a través de setcookie para cambiar el valor de una cookie en concreto (la que se crea en login.php) y no crear otra cookie por error
             setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Cambiamos la cookie idioma al valor 'spanish'
         }
         if ($_REQUEST['language'] == 'portuguese') {
@@ -35,9 +36,9 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
         header("Location: programa.php");
     }
 
-    require_once '../config/confDB.php';
+    require_once '../config/confDB.php'; //requerimos una vez el archivo de configuración
     try {
-
+        //BUSQUEDA EN LA BASE DE DATOS DE LA INFORMACIÓN QUE MOSTRAREMOS POR PANTALLA DEL USURIO LOGEADO
         $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); //creo el objeto PDO con las constantes iniciadas en el archivo datosBD.php
         $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //le damos este atributo a la conexión (la configuramos) para poder utilizar las excepciones
         //Creación de la consulta preparada
@@ -53,6 +54,7 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
 
         $oUsuario = $buscarUsuario->fetchObject();
 
+        //Variables con las que sacaremos la información del usuario logeado
         $DescripcionUsuario = $oUsuario->T01_DescUsuario;
         $NumeroConexiones = $oUsuario->T01_NumConexiones;
         $PerfilUsuario = $oUsuario->T01_Perfil;
@@ -93,9 +95,9 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
                     ?>Welcome
                     <?php
                 }
-                ?> <span class="respuesta"><?php echo $DescripcionUsuario; ?></span>!</h3>
+                ?> <span class="respuesta"><?php echo $DescripcionUsuario; ?></span>!</h3> <!-- SALUDO AL USUARIO (COOKIE Y DESCRIPCIÓN)-->
                 <?php
-                if ($PerfilUsuario === "admin") {
+                if ($PerfilUsuario === "admin") { //PERFIL DE USUARIO
                     ?>
                 <h3><span class="respuesta">Eres el admin</span></h3>
                 <?php
@@ -104,11 +106,13 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
                 <h3><span class="respuesta">Eres un simple usuario</span></h3>
                 <?php
             }
-            if ($NumeroConexiones === '1') {
+            //NÚMERO DE CONEXIONES DEL USUARIO
+            if ($NumeroConexiones === '1') {  //si es la primera vez, sale un mensaje
                 ?>
                 <h3><span class="respuesta">¡Es la primera vez que te conectas!</span></h3>
                 <?php
             } else {
+                //si no es la primera vez, sale un mensaje mostrando el número de visitas y la fecha formateada (fecha y hora) de la conexión anterior
                 ?>
                 <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $NumeroConexiones; ?></span></h3>
                 <h3>Última conexión: <span class="respuesta"><?php
@@ -118,11 +122,13 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
                         echo $fechaFormateada;
                     }
                     ?>
-                </span></h3>          
+                </span></h3>      
+                <!-- FORMULARIO CON LOS BOTONES PARA IR A DETALLE.PHP O CERRAR LA SESIÓN -->
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
             </form>
+                <!-- BOTONES PARA CAMBIAR EL IDIOMA (CAMBIA EL VALOR DE LA COOKIE) -->
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=spanish"><button><img src="../webroot/css/images/españa.png" alt="Español"/></button></a>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=portuguese"><button><img src="../webroot/css/images/portugal.png" alt="Português"/></button></a>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=italian"><button><img src="../webroot/css/images/italia.png" alt="Italiano"/></button></a>
