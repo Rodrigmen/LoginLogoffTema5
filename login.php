@@ -12,7 +12,6 @@ try {
     $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //le damos este atributo a la conexión (la configuramos) para poder utilizar las excepciones
     //Requerimos una vez la libreria de validaciones
     require_once 'core/libreriaValidacion.php';
-    session_start();
 
     //Creamos una variable boleana para definir cuando esta bien o mal rellenado el formulario
     $entradaOK = true;
@@ -49,8 +48,9 @@ try {
     }
 
     if ($entradaOK) { //si el formulario esta bien rellenado
+        session_start();
         //Creación de la consulta preparada
-        $consultaUsuario = "SELECT * FROM T01_Usuario WHERE (T01_CodUsuario = :codigo) AND  (T01_Password  = :password)";
+        $consultaUsuario = "SELECT T01_CodUsuario, T01_FechaHoraUltimaConexion FROM T01_Usuario WHERE (T01_CodUsuario = :codigo) AND  (T01_Password  = :password)";
         //Preparación de la consulta preparada
         $buscarUsuario = $oConexionPDO->prepare($consultaUsuario);
 
@@ -68,11 +68,8 @@ try {
             $oUsuario = $buscarUsuario->fetchObject(); //se recorre el resultado como un objeto
             //se sacan los datos del objeto [de la base de datos] y se insertan en la sesión actual (actúa como un array asociativo)
             //NOTA: SE INSERTAN PRIMERO EN LA SESIÓN LOS DATOS DE LA BASE DE DATOS Y LUEGO SE ACTULIZAN, COGIENDO LOS DATOS ANTERIORES A LA ACTUALIZACIÓN
-            $_SESSION['codigo'] = $oUsuario->T01_CodUsuario;
-            $_SESSION['descripcion'] = $oUsuario->T01_DescUsuario;
-            $_SESSION['perfil'] = $oUsuario->T01_Perfil;
-            $_SESSION['numconex'] = $oUsuario->T01_NumConexiones;
-            $_SESSION['ultimaconex'] = $oUsuario->T01_FechaHoraUltimaConexion;
+            $_SESSION['usuarioDAW218LogInLogOutTema5'] = $oUsuario->T01_CodUsuario;            
+            $_SESSION['FechaHoraUltimaconexionAnterior'] = $oUsuario->T01_FechaHoraUltimaConexion;
 
             //Actualizar el número de conexiones en la BASE DE DATOS
             $consultaActualizar = "UPDATE T01_Usuario SET T01_NumConexiones = T01_NumConexiones + 1 WHERE (T01_CodUsuario = :codigo)";
@@ -86,10 +83,10 @@ try {
 
             $consultaActualizar2 = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
             $actualizarFecha = $oConexionPDO->prepare($consultaActualizar2);
-            $actualizarFecha->bindParam(':codigo', $_SESSION['codigo']);
+            $actualizarFecha->bindParam(':codigo', $_SESSION['usuarioDAW218LogInLogOutTema5']);
             $actualizarFecha->execute();
 
-            setcookie("language", "spanish");
+            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal

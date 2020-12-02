@@ -7,7 +7,7 @@
  * @author Rodrigo Robles <rodrigo.robmin@educa.jcyl.es>
  */
 session_start();
-if (!isset($_SESSION['codigo'])) {
+if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
     header('Location: ../login.php');
 }
 ?>

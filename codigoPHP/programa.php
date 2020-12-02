@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['codigo'])) {
+if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
     header('Location: ../login.php');
 } else {
     if (isset($_POST['salir'])) {
@@ -16,24 +16,51 @@ if (!isset($_SESSION['codigo'])) {
         header('Location: ../login.php');
     } else if (isset($_POST['detalle'])) {
         header('Location: detalle.php');
-    } else if (isset($_POST['recargar'])) { //Comprobamos que el usuario haya enviado el formulario (se recarga la página)
-        if ($_POST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
-            setcookie("language", 'spanish'); //Creamos o cambiamos la cookie idioma al valor 'spanish'
+    } else if (isset($_REQUEST['language'])) { //Comprobamos que el usuario haya enviado el formulario (se recarga la página)
+        if ($_REQUEST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
+            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Creamos o cambiamos la cookie idioma al valor 'spanish'
         }
-        if ($_POST['language'] == 'portuguese') {
-            setcookie("language", 'portuguese'); 
+        if ($_REQUEST['language'] == 'portuguese') {
+            setcookie("language", "portuguese", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
         }
-        if ($_POST['language'] == 'italian') {
-            setcookie("language", 'italian'); 
+        if ($_REQUEST['language'] == 'italian') {
+            setcookie("language", "italian", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
         }
-        if ($_POST['language'] == 'french') {
-            setcookie("language", 'french'); 
+        if ($_REQUEST['language'] == 'french') {
+            setcookie("language", "french", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
         }
-        if ($_POST['language'] == 'english') {
-            setcookie("language", 'english'); 
+        if ($_REQUEST['language'] == 'english') {
+            setcookie("language", "english", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
         }
+        header("Location: programa.php");
+    }
 
-        header('location: programa.php'); //Volvemos a cargar el ejercicio01.php para que se recargue el valor de las cookies
+    require_once '../config/confDB.php';
+    try {
+
+        $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); //creo el objeto PDO con las constantes iniciadas en el archivo datosBD.php
+        $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //le damos este atributo a la conexión (la configuramos) para poder utilizar las excepciones
+        //Creación de la consulta preparada
+        $consultaUsuario = "SELECT T01_DescUsuario, T01_NumConexiones, T01_Perfil FROM T01_Usuario WHERE T01_CodUsuario = :codigo";
+        //Preparación de la consulta preparada
+        $buscarUsuario = $oConexionPDO->prepare($consultaUsuario);
+
+        //Insertamos los datos en la consulta preparada
+        $buscarUsuario->bindParam(':codigo', $_SESSION['usuarioDAW218LogInLogOutTema5']);
+
+        //Se ejecuta la consulta preparada
+        $buscarUsuario->execute();
+
+        $oUsuario = $buscarUsuario->fetchObject();
+
+        $DescripcionUsuario = $oUsuario->T01_DescUsuario;
+        $NumeroConexiones = $oUsuario->T01_NumConexiones;
+        $PerfilUsuario = $oUsuario->T01_Perfil;
+    } catch (PDOException $excepcionPDO) {
+        echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //Muestra el mesaje de error
+        echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; // Muestra el codigo del error
+    } finally {
+        unset($oConexionPDO); //destruimos el objeto  
     }
 }
 ?>
@@ -50,8 +77,8 @@ if (!isset($_SESSION['codigo'])) {
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
             <h3>¡<?php
-                if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
-                    ?>Bienvenido/a  
+if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
+    ?>Bienvenido/a  
                     <?php
                 } else if ($_COOKIE["language"] === "portuguese") {
                     ?>Bem-vinda 
@@ -66,9 +93,9 @@ if (!isset($_SESSION['codigo'])) {
                     ?>Welcome
                     <?php
                 }
-                ?> <span class="respuesta"><?php echo $_SESSION['descripcion']; ?></span>!</h3>
+                ?> <span class="respuesta"><?php echo $DescripcionUsuario; ?></span>!</h3>
                 <?php
-                if ($_SESSION['perfil'] === "admin") {
+                if ($PerfilUsuario === "admin") {
                     ?>
                 <h3><span class="respuesta">Eres el admin</span></h3>
                 <?php
@@ -77,65 +104,31 @@ if (!isset($_SESSION['codigo'])) {
                 <h3><span class="respuesta">Eres un simple usuario</span></h3>
                 <?php
             }
-            if ($_SESSION['numconex'] === '0') {
+            if ($NumeroConexiones === '1') {
                 ?>
                 <h3><span class="respuesta">¡Es la primera vez que te conectas!</span></h3>
                 <?php
             } else {
                 ?>
-                <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $_SESSION['numconex'] + 1; ?></span></h3>
+                <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $NumeroConexiones; ?></span></h3>
                 <h3>Última conexión: <span class="respuesta"><?php
-                        $fecha = new DateTime();
-                        $fecha->setTimestamp($_SESSION['ultimaconex']);
-                        $fechaFormateada = $fecha->format("Y-m-d H:i:s");
-                        echo $fechaFormateada;
-                    }
-                    ?>
+            $fecha = new DateTime();
+            $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
+            $fechaFormateada = $fecha->format("Y-m-d H:i:s");
+            echo $fechaFormateada;
+        }
+            ?>
                 </span></h3>          
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
                 <input type="submit" name="recargar" value="Recargar"/><br>
-
-                <label for="language">Selecciona el idioma:</label>
-                <select name="language" id="language">
-                    <option value="spanish" <?php
-                    if (isset($_COOKIE['language'])) {//si existe la cookie 'language'
-                        if ($_COOKIE['language'] === "spanish") {//Si el idioma almacenado es español
-                            echo 'selected'; //Será el valor seleccionado en nuestra lista una vez recargada la página
-                        }
-                    }
-                    ?>>Español</option>
-                    <option value="portuguese" <?php
-                    if (isset($_COOKIE['language'])) {
-                        if ($_COOKIE['language'] === "portuguese") {
-                            echo 'selected'; 
-                        }
-                    }
-                    ?>>Portugés</option>
-                    <option value="italian" <?php
-                    if (isset($_COOKIE['language'])) {
-                        if ($_COOKIE['language'] === "italian") {
-                            echo 'selected'; 
-                        }
-                    }
-                    ?>>Italiano</option>
-                    <option value="french" <?php
-                    if (isset($_COOKIE['language'])) {
-                        if ($_COOKIE['language'] === "french") {
-                            echo 'selected'; 
-                        }
-                    }
-                    ?>>Francés</option>
-                    <option value="english" <?php
-                    if (isset($_COOKIE['language'])) {
-                        if ($_COOKIE['language'] === "english") {
-                            echo 'selected';
-                        }
-                    }
-                    ?>>Inglés</option>  
-                </select>
             </form>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=spanish"><button><img src="../webroot/css/images/españa.png" alt="Español"/></button></a>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=portuguese"><button><img src="../webroot/css/images/portugal.png" alt="Português"/></button></a>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=italian"><button><img src="../webroot/css/images/italia.png" alt="Italiano"/></button></a>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=french"><button><img src="../webroot/css/images/francia.png" alt="Français"/></button></a>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=english"><button><img src="../webroot/css/images/inglaterra.png" alt="English"/></button></a>
         </div>
     </body>
     <footer>

@@ -4,7 +4,7 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    font-family: Copperplate Gothic Light, sans-serif;
+    font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
     font-weight: bold;
 }
 
@@ -43,8 +43,10 @@ h2{
 .programa input[type="submit"]:hover{
     cursor: pointer;
 }
-
-
+a button img{
+    width: 50px;
+    height: auto;
+}
 
 /*-----------FOOTER-----------*/
 footer{
