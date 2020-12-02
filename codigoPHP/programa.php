@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
 } else {
     if (isset($_POST['salir'])) {
         session_destroy(); //Destrucción de la sesión
-        //Destrucción de las cookies
+        //Destrucción de todas las cookies (esto es para que se borre la cookie creada al iniciar sesión)
         $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
         foreach ($cookies as $cookie) {
             $parts = explode('=', $cookie);
@@ -16,9 +16,9 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
         header('Location: ../login.php');
     } else if (isset($_POST['detalle'])) {
         header('Location: detalle.php');
-    } else if (isset($_REQUEST['language'])) { //Comprobamos que el usuario haya enviado el formulario (se recarga la página)
+    } else if (isset($_REQUEST['language'])) { //Comprobamos que se cambie el idioma 
         if ($_REQUEST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
-            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Creamos o cambiamos la cookie idioma al valor 'spanish'
+            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Cambiamos la cookie idioma al valor 'spanish'
         }
         if ($_REQUEST['language'] == 'portuguese') {
             setcookie("language", "portuguese", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
@@ -77,8 +77,8 @@ if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) {
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
             <h3>¡<?php
-if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
-    ?>Bienvenido/a  
+                if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
+                    ?>Bienvenido/a  
                     <?php
                 } else if ($_COOKIE["language"] === "portuguese") {
                     ?>Bem-vinda 
@@ -112,17 +112,16 @@ if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', 
                 ?>
                 <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $NumeroConexiones; ?></span></h3>
                 <h3>Última conexión: <span class="respuesta"><?php
-            $fecha = new DateTime();
-            $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
-            $fechaFormateada = $fecha->format("Y-m-d H:i:s");
-            echo $fechaFormateada;
-        }
-            ?>
+                        $fecha = new DateTime();
+                        $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
+                        $fechaFormateada = $fecha->format("Y-m-d H:i:s");
+                        echo $fechaFormateada;
+                    }
+                    ?>
                 </span></h3>          
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
-                <input type="submit" name="recargar" value="Recargar"/><br>
             </form>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=spanish"><button><img src="../webroot/css/images/españa.png" alt="Español"/></button></a>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=portuguese"><button><img src="../webroot/css/images/portugal.png" alt="Português"/></button></a>
