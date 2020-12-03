@@ -22,19 +22,17 @@ try {
 
     //Array que contiene los posibles errores de los campos del formulario
     $aErrores = [
-        'eNombre' => null,
+        'eCodigo' => null,
         'ePassword' => null
     ];
 
-    //Array que contiene los valores correctos de los campos del formulario
-    $aFormulario = [
-        'eNombre' => null,
-        'ePassword' => null
-    ];
 
+    if (isset($_POST['registrarse'])) {
+        header('Location: codigoPHP/registro.php');
+    }
     if (isset($_POST['enviar'])) { //si se pulsa 'enviar' (input name="enviar")
         //Validación de los campos (el resultado de la validación se mete en el array aErrores para comprobar posteriormente si da error)
-        $aErrores['eNombre'] = validacionFormularios::comprobarAlfabetico($_POST['nombre'], 20, 3, REQUIRED);
+        $aErrores['eCodigo'] = validacionFormularios::comprobarAlfaNumerico($_POST['codigo'], 15, 3, REQUIRED);
         $aErrores['ePassword'] = validacionFormularios::comprobarAlfaNumerico($_POST['password'], 20, 1, REQUIRED);
 
         //recorremos el array de posibles errores (aErrores), si hay alguno, el campo se limpia y entradaOK es falsa (se vuelve a cargar el formulario)
@@ -55,10 +53,10 @@ try {
         $buscarUsuario = $oConexionPDO->prepare($consultaUsuario);
 
         //Creación de la contraseña mediante concatenación y el hash(codificación)
-        $HASHPassword = hash('sha256', $_POST['nombre'] . $_POST['password']);
-        
+        $HASHPassword = hash('sha256', $_POST['codigo'] . $_POST['password']);
+
         //Insertamos los datos en la consulta preparada
-        $buscarUsuario->bindParam(':codigo', $_POST['nombre']);
+        $buscarUsuario->bindParam(':codigo', $_POST['codigo']);
         $buscarUsuario->bindParam(':password', $HASHPassword);
 
         //Se ejecuta la consulta preparada
@@ -70,7 +68,7 @@ try {
             $oUsuario = $buscarUsuario->fetchObject(); //se recorre el resultado como un objeto
             //se sacan los datos del objeto [de la base de datos] y se insertan en la sesión actual (actúa como un array asociativo)
             //NOTA: SE INSERTAN PRIMERO EN LA SESIÓN LOS DATOS DE LA BASE DE DATOS Y LUEGO SE ACTULIZAN, COGIENDO LOS DATOS ANTERIORES A LA ACTUALIZACIÓN
-            $_SESSION['usuarioDAW218LogInLogOutTema5'] = $oUsuario->T01_CodUsuario;            
+            $_SESSION['usuarioDAW218LogInLogOutTema5'] = $oUsuario->T01_CodUsuario;
             $_SESSION['FechaHoraUltimaconexionAnterior'] = $oUsuario->T01_FechaHoraUltimaConexion;
 
             //Consulta preparada -> Actualizar el número de conexiones en la BASE DE DATOS
@@ -85,10 +83,10 @@ try {
 
             $consultaActualizar2 = "UPDATE T01_Usuario SET T01_FechaHoraUltimaConexion = $tiempo WHERE T01_CodUsuario = :codigo";
             $actualizarFecha = $oConexionPDO->prepare($consultaActualizar2);
-            $actualizarFecha->bindParam(':codigo', $_SESSION['usuarioDAW218LogInLogOutTema5']);
+            $actualizarFecha->bindParam(':codigo', $oUsuario->T01_CodUsuario);
             $actualizarFecha->execute();
 
-            /*----COOKIE-----*/
+            /* ----COOKIE----- */
             //creación de la cookie (su valor se pasara a 'programa.php' para identificar el idioma en el que aparecera la información)
             //setcookie(nombre, valor, expires, path, domain, secure, options, httponly);
             //name->nombre de la cookie
@@ -99,8 +97,8 @@ try {
             //secure->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
             //httponly->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
             //NOTA: Si quieres mantener la misma cookie por varios archivos en diferentes directorios (como 'login.php' y 'programa.php') el path (ruta) y el domain (dominio) tienen que ser el mismo
-            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); 
-            
+            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
+
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal
@@ -132,25 +130,25 @@ try {
                 <form id="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <fieldset>
 
-                        <!-----------------NOMBRE----------------->
+                        <!-----------------CÓDIGO----------------->
                         <div class="required">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" name="nombre"  placeholder="Nombre de usuario" value="<?php
+                            <label for="codigo">Código:</label>
+                            <input type="text" name="codigo"  placeholder="Código de usuario" value="<?php
                             //si no hay error y se ha insertado un valor en el campo con anterioridad
-                            if ($aErrores['eNombre'] == null && isset($_POST['nombre'])) {
+                            if ($aErrores['eCodigo'] == null && isset($_POST['codigo'])) {
 
                                 //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
                                 //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
-                                echo $_POST['nombre'];
+                                echo $_POST['codigo'];
                             }
                             ?>"/>
 
                             <?php
                             //si hay error en este campo
-                            if ($aErrores['eNombre'] != NULL) {
+                            if ($aErrores['eCodigo'] != NULL) {
                                 echo "<div class='errores'>" .
                                 //se muestra dicho error
-                                $aErrores['eNombre'] .
+                                $aErrores['eCodigo'] .
                                 '</div>';
                             }
                             ?>
@@ -179,7 +177,8 @@ try {
                             }
                             ?>
                         </div>
-                        <input type="submit" name="enviar" value="Siguiente" />
+                        <input type="submit" name="enviar" value="Iniciar Sesión" />
+                        <input type="submit" name="registrarse" value="¿Eres nuevo? Registrate aquí" />
                     </fieldset>
                 </form>
                 <?php
