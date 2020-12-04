@@ -84,7 +84,7 @@ input:placeholder-shown {
     background-color: #FAFBFC;
 }
 
-form input[name="enviar"], form input[name="registrarse"], form input[name="cancelar"], form input[name="eliminar"], form input[name="cambiarPassword"]{
+form input[type="submit"]{
     text-decoration: underline white; 
     width:100%;
     height: 2%;
@@ -95,7 +95,8 @@ form input[name="enviar"], form input[name="registrarse"], form input[name="canc
     background-color:#000;
     border:none;
     margin-bottom: 1%;
-} 
+}
+
 form input[name="eliminar"]{
     text-decoration: none;
     background-color:red;

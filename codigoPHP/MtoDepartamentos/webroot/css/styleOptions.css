@@ -1,0 +1,103 @@
+/* 
+    Created on : 21 oct. 2020, 11:17:31
+    Author     : daw2
+*/
+*{
+    box-sizing:border-box;
+    font-family: Copperplate Gothic Light, sans-serif;
+}
+body{
+    padding-top: 5%;
+    background-color: #A9C6FF;
+    overflow-y: hidden;
+}
+fieldset{
+    border:0;
+
+}
+legend{
+    font-size: 35px;
+    font-weight:bold;
+}
+form{
+    
+    width: 750px;
+    border-radius:10px;
+    margin: 0 auto;
+    background-color:#ccc;
+}
+
+form label{
+    padding: 5px;
+    font-weight:bold;
+    display:inline-block;
+}
+form input{
+    padding:3px 10px;
+    margin:8px 0;
+    display:inline-block;
+}
+
+form input[type="text"]{
+    border-radius:3px;
+    width:300px;
+
+}
+
+form input[type="button"], form input[type="submit"]{
+    width:100%;
+    padding:8px 16px;
+    margin-top:32px;
+    border:1px solid #000;
+    border-radius:5px;
+    display:block;
+    color:#fff;
+    background-color:#000;
+} 
+
+form input[name="eliminar"], form input[name="inhabilitar"]{
+    background-color:red;
+}
+form input[name="editar"], form input[name="rehabilitar"]{
+    background-color:blue;
+}
+form input[value="Insertar"]{
+    background-color:green;
+}
+form input[type="button"]:hover, form input[type="submit"]:hover{
+    cursor:pointer;
+    color:black;
+    background: white;
+}
+
+.errores{
+    color:red;
+    float:right;
+    margin:0 auto;
+}
+.required{
+    background-color: #ADB9C5;
+    border-radius:10px;
+}
+.required, .optional{
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+.required select{
+    border: 0;
+    font-size: 14px;
+    height: 30px;
+    padding: 5px;
+    width: 250px;
+}
+.required select:focus{
+    border-color: #00BA68;
+    background-color: #FAFBFC;
+    outline: 5px;
+    color:#008508;
+}
+
+input:read-only{
+    background-color: #EEEDD3;
+}

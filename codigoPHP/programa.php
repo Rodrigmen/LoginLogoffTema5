@@ -3,6 +3,7 @@ session_start(); //se recupera la sesión
 if (!isset($_SESSION['usuarioDAW218LogInLogOutTema5'])) { //si la sesión no tiene información (es decir, no esta creada la sesión correctamente = no te has logeado), se devuelve automáticamente a la página de login
     header('Location: ../login.php');
 }
+//BOTONES
 if (isset($_POST['salir'])) { //si ejecutamos el boton 'salir'
     session_destroy(); //Destrucción de la sesión
     //Destrucción de todas las cookies (esto es para que se borre la cookie creada al iniciar sesión)
@@ -18,6 +19,14 @@ if (isset($_POST['salir'])) { //si ejecutamos el boton 'salir'
 if (isset($_POST['detalle'])) { //o si ejecutamos el boton 'detalle'
     header('Location: detalle.php'); //nos vamos a la página 'detalle.php'
 }
+if (isset($_POST['editar'])) {
+    header("Location: editarPerfil.php");
+}
+if (isset($_POST['mantenimiento'])) {
+    header("Location: MtoDepartamentos/codigoPHP/MtoDepartamentos.php");
+}
+
+//COOKIE
 if (isset($_REQUEST['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
     if ($_REQUEST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
         //se definen todos los aspectos de la cookie a través de setcookie para cambiar el valor de una cookie en concreto (la que se crea en login.php) y no crear otra cookie por error
@@ -36,10 +45,6 @@ if (isset($_REQUEST['language'])) { //o si se cambia el lenguaje (se ejecuta alg
         setcookie("language", "english", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
     }
     header("Location: programa.php");
-}
-
-if (isset($_POST['editar'])) {
-    header("Location: editarPerfil.php");
 }
 
 require_once '../config/confDB.php'; //requerimos una vez el archivo de configuración
@@ -84,8 +89,8 @@ try {
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
             <h3>¡<?php
-if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
-    ?>Bienvenido/a  
+                if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
+                    ?>Bienvenido/a  
                     <?php
                 } else if ($_COOKIE["language"] === "portuguese") {
                     ?>Bem-vinda 
@@ -121,18 +126,19 @@ if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', 
                 ?>
                 <h3>Número de veces que te has conectado:<span class="respuesta"><?php echo $NumeroConexiones; ?></span></h3>
                 <h3>Última conexión: <span class="respuesta"><?php
-            $fecha = new DateTime();
-            $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
-            $fechaFormateada = $fecha->format("Y-m-d H:i:s");
-            echo $fechaFormateada;
-        }
-            ?>
+                        $fecha = new DateTime();
+                        $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
+                        $fechaFormateada = $fecha->format("Y-m-d H:i:s");
+                        echo $fechaFormateada;
+                    }
+                    ?>
                 </span></h3>      
             <!-- FORMULARIO CON LOS BOTONES PARA IR A DETALLE.PHP O CERRAR LA SESIÓN -->
             <form class="programa" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
                 <input type="submit" name="editar" value="Editar"/>
+                <input type="submit" name="mantenimiento" value="MtoDepartamentos"/>
             </form>
             <!-- BOTONES PARA CAMBIAR EL IDIOMA (CAMBIA EL VALOR DE LA COOKIE) -->
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=spanish"><button><img src="../webroot/css/images/españa.png" alt="Español"/></button></a>
