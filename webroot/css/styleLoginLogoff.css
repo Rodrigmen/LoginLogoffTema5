@@ -84,7 +84,7 @@ input:placeholder-shown {
     background-color: #FAFBFC;
 }
 
-form input[name="enviar"] {
+form input[type="submit"]{
     text-decoration: underline white; 
     width:100%;
     height: 2%;
@@ -95,12 +95,37 @@ form input[name="enviar"] {
     background-color:#000;
     border:none;
     margin-bottom: 1%;
-} 
+}
+
+form input[name="eliminar"]{
+    text-decoration: none;
+    background-color:red;
+}
+
+input:read-only{
+    background-color: #EEEDD3;
+}
 
 form input[type="submit"]:hover{
     cursor:pointer;
     color:black;
     background: white;
+}
+form input[name="cambiarPassword"]:hover{
+    text-decoration: none;
+    cursor:pointer;
+    color:white;
+    background: grey;
+}
+form input[name="cancelar"]:hover{
+    text-decoration: none; 
+    cursor:pointer;
+    color:black;
+    background: red;
+}
+form input[name="eliminar"]:hover{
+    text-decoration: none;
+    background-color:red;
 }
 .errores{
     font-size: 2.5vh;
