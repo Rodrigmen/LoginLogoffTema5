@@ -24,21 +24,21 @@ if (isset($_POST['editar'])) {
 }
 
 //COOKIE
-if (isset($_REQUEST['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
-    if ($_REQUEST['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
+if (isset($_GET['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
+    if ($_GET['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
         //se definen todos los aspectos de la cookie a través de setcookie para cambiar el valor de una cookie en concreto (la que se crea en login.php) y no crear otra cookie por error
         setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Cambiamos la cookie idioma al valor 'spanish'
     }
-    if ($_REQUEST['language'] == 'portuguese') {
+    if ($_GET['language'] == 'portuguese') {
         setcookie("language", "portuguese", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
     }
-    if ($_REQUEST['language'] == 'italian') {
+    if ($_GET['language'] == 'italian') {
         setcookie("language", "italian", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
     }
-    if ($_REQUEST['language'] == 'french') {
+    if ($_GET['language'] == 'french') {
         setcookie("language", "french", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
     }
-    if ($_REQUEST['language'] == 'english') {
+    if ($_GET['language'] == 'english') {
         setcookie("language", "english", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
     }
     header("Location: programa.php");
