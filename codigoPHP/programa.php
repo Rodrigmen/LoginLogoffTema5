@@ -22,9 +22,6 @@ if (isset($_POST['detalle'])) { //o si ejecutamos el boton 'detalle'
 if (isset($_POST['editar'])) {
     header("Location: editarPerfil.php");
 }
-if (isset($_POST['mantenimiento'])) {
-    header("Location: MtoDepartamentos/codigoPHP/MtoDepartamentos.php");
-}
 
 //COOKIE
 if (isset($_REQUEST['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
@@ -138,7 +135,6 @@ try {
                 <input type="submit" name="detalle" value="Detalle"/>
                 <input type="submit" name="salir" value="Salir"/>
                 <input type="submit" name="editar" value="Editar"/>
-                <input type="submit" name="mantenimiento" value="MtoDepartamentos"/>
             </form>
             <!-- BOTONES PARA CAMBIAR EL IDIOMA (CAMBIA EL VALOR DE LA COOKIE) -->
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?language=spanish"><button><img src="../webroot/css/images/españa.png" alt="Español"/></button></a>
