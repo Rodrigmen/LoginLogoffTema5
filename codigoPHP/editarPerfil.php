@@ -19,7 +19,7 @@ try {
 
     //Array que contiene los posibles errores de los campos del formulario
     $aErrores = [
-        'eNombreN' => null
+        'eNombre' => null
     ];
 
 
@@ -45,7 +45,7 @@ try {
     }
 
     //Consulta para sacar la descripcion actual del usuario
-    $consultaUsuario = "SELECT T01_DescUsuario FROM T01_Usuario WHERE (T01_CodUsuario = :codigo)";
+    $consultaUsuario = "SELECT T01_DescUsuario, T01_Perfil, T01_NumConexiones FROM T01_Usuario WHERE (T01_CodUsuario = :codigo)";
     //Preparación de la consulta preparada
     $buscarUsuario = $oConexionPDO->prepare($consultaUsuario);
 
@@ -56,13 +56,18 @@ try {
     //Se ejecuta la consulta preparada
     $buscarUsuario->execute();
     $oUsuario = $buscarUsuario->fetchObject();
-    $descripcionActual = $oUsuario->T01_DescUsuario;
+    $descripcionUser = $oUsuario->T01_DescUsuario;
+    $perfilUser = $oUsuario->T01_Perfil;
+    $NumConexionesUser = $oUsuario->T01_NumConexiones;
+    $fecha = new DateTime();
+    $fecha->setTimestamp($_SESSION['FechaHoraUltimaconexionAnterior']);
+    $fechaFormateada = $fecha->format("Y-m-d H:i:s");
 
     if (isset($_POST['enviar'])) { //si se pulsa 'enviar' (input name="enviar")
         //Validación de los campos (el resultado de la validación se mete en el array aErrores para comprobar posteriormente si da error)
-        $aErrores['eNombreN'] = validacionFormularios::comprobarAlfabetico($_POST['nombreN'], 25, 3, REQUIRED);
-        if ($_POST['nombreN'] === $descripcionActual) {
-            $aErrores['eNombreN'] = "¡No puedes introducir el mismo!";
+        $aErrores['eNombre'] = validacionFormularios::comprobarAlfabetico($_POST['nombre'], 25, 3, REQUIRED);
+        if ($_POST['nombre'] === $descripcionUser) {
+            $aErrores['eNombre'] = "¡No puedes introducir el mismo!";
         }
 
         //recorremos el array de posibles errores (aErrores), si hay alguno, el campo se limpia y entradaOK es falsa (se vuelve a cargar el formulario)
@@ -82,7 +87,7 @@ try {
 
 
         //Insertamos los datos en la consulta preparada
-        $actualizarUsuario->bindParam(':descripcionNueva', $_POST['nombreN']);
+        $actualizarUsuario->bindParam(':descripcionNueva', $_POST['nombre']);
         $actualizarUsuario->bindParam(':codigo', $_SESSION['usuarioDAW218LogInLogOutTema5']);
 
         //Se ejecuta la consulta preparada
@@ -106,36 +111,43 @@ try {
                 <form id="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <fieldset>
 
+                        <!-----------------CÓDIGO----------------->
+                        <div class="required">
+                            <label for="codigo">Código:</label>
+                            <input type="text" name="codigo" value="<?php echo $_SESSION['usuarioDAW218LogInLogOutTema5']; ?>" readonly/>
                         </div>
                         <!-----------------NOMBRE [DESCRIPCIÓN] ACTUAL ----------------->
                         <div class="required">
-                            <label for="nombre">Nombre Actual:</label>
-                            <input type="text" name="nombre" value="<?php echo $descripcionActual; ?>" readonly/>
-
-                            <!-----------------NOMBRE [DESCRIPCIÓN] NUEVO ----------------->
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" name="nombre" value="<?php echo $descripcionUser; ?>"/>
+                            <?php
+                            //si hay error en este campo
+                            if ($aErrores['eNombre'] != NULL) {
+                                echo "<div class='errores'>" .
+                                //se muestra dicho error
+                                $aErrores['eNombre'] .
+                                '</div>';
+                            }
+                            ?>
+                            <!-----------------PERFIL----------------->
                             <div class="required">
-                                <label for="nombreN">Nombre Nuevo:</label>
-                                <input type="text" name="nombreN"  placeholder="Nuevo nombre de usuario" value="<?php
-                                //si no hay error y se ha insertado un valor en el campo con anterioridad
-                                if ($aErrores['eNombreN'] == null && isset($_POST['nombreN'])) {
-
-                                    //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
-                                    //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
-                                    echo $_POST['nombreN'];
-                                }
-                                ?>"/>
-
-                                <?php
-                                //si hay error en este campo
-                                if ($aErrores['eNombreN'] != NULL) {
-                                    echo "<div class='errores'>" .
-                                    //se muestra dicho error
-                                    $aErrores['eNombreN'] .
-                                    '</div>';
-                                }
-                                ?>
-
+                                <label for="perfil">Perfil:</label>
+                                <input type="text" name="perfil" value="<?php echo $perfilUser; ?>" readonly/>
                             </div>
+
+                            <!-----------------NÚMERO DE CONEXIONES----------------->
+                            <div class="required">
+                                <label for="conexiones">Número de conexiones:</label>
+                                <input type="number" name="conexiones" value="<?php echo $NumConexionesUser; ?>" readonly/>
+                            </div>
+
+                            <!-----------------ÛLTIMA FECHA DE CONEXION----------------->
+                            <div class="required">
+                                <label for="ult">Última fecha de conexión:</label>
+                                <input type="datetime" name="ult" value="<?php echo $fechaFormateada ?>" readonly/>
+                            </div>
+
+                        </div>
                         </div>
                         <input type="submit" name="enviar" value="Aceptar" />
                         <input type="submit" name="cancelar" value="Cancelar" />

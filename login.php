@@ -91,13 +91,13 @@ try {
             //setcookie(nombre, valor, expires, path, domain, secure, options, httponly);
             //name->nombre de la cookie
             //valor->el valor de la cookie
-            //expires->el tiempo en que la cookie expira (0 = cuando se cierra la sesión)
+            //expires->el tiempo en que la cookie expira (0 = cuando se cierra la sesión)  [en este caso, dura un día]
             //path->la ruta dentro del servidor en la que la cookie estará disponible
             //domain->el (sub)dominio al que la cookie está disponible
             //secure->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
             //httponly->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
             //NOTA: Si quieres mantener la misma cookie por varios archivos en diferentes directorios (como 'login.php' y 'programa.php') el path (ruta) y el domain (dominio) tienen que ser el mismo
-            setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
+            setcookie("language", "spanish", time()+60*60*24 , "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
 
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
