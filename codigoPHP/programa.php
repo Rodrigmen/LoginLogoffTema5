@@ -24,25 +24,21 @@ if (isset($_POST['editar'])) {
 }
 
 //COOKIE
-if (isset($_GET['language'])) { //o si se cambia el lenguaje (se ejecuta alguno de los botones con banderas)
-    if ($_GET['language'] == 'spanish') {//Si el idioma seleccionado por el usuario es español
-        //se definen todos los aspectos de la cookie a través de setcookie para cambiar el valor de una cookie en concreto (la que se crea en login.php) y no crear otra cookie por error
-        setcookie("language", "spanish", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP"); //Cambiamos la cookie idioma al valor 'spanish'
-    }
-    if ($_GET['language'] == 'portuguese') {
-        setcookie("language", "portuguese", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
-    }
-    if ($_GET['language'] == 'italian') {
-        setcookie("language", "italian", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
-    }
-    if ($_GET['language'] == 'french') {
-        setcookie("language", "french", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
-    }
-    if ($_GET['language'] == 'english') {
-        setcookie("language", "english", 0, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
-    }
-    header("Location: programa.php");
+$aSaludoIdiomas = [
+    "spanish" => "Bienvenido/a",
+    "portuguese" => "Bem-vinda",
+    "italian" => "Benvenuto",
+    "french" => "Bienvenue",
+    "english" => "Welcome"
+];
+
+if (isset($_GET['language'])) { //al elegir el idioma
+    setcookie("language", $_GET['language'], time() + 60 * 60 * 24, "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
+    $saludo = $aSaludoIdiomas[$_GET['language']];
+} else {
+    $saludo = $aSaludoIdiomas["spanish"];
 }
+
 
 require_once '../config/confDB.php'; //requerimos una vez el archivo de configuración
 try {
@@ -85,27 +81,11 @@ try {
     <body>
         <div class="programa">
             <h2>USUARIO CORRECTO</h2>
-            <h3>¡<?php
-                if ($_COOKIE["language"] === "spanish") { //si el valor de la cookie 'spanish', se muestra el siguiente mensaje por pantalla
-                    ?>Bienvenido/a  
-                    <?php
-                } else if ($_COOKIE["language"] === "portuguese") {
-                    ?>Bem-vinda 
-                    <?php
-                } else if ($_COOKIE["language"] === "italian") {
-                    ?>Benvenuto
-                    <?php
-                } else if ($_COOKIE["language"] === "french") {
-                    ?>Bienvenue
-                    <?php
-                } else if ($_COOKIE["language"] === "english") {
-                    ?>Welcome
-                    <?php
-                }
-                ?> <span class="respuesta"><?php echo $DescripcionUsuario; ?></span>!</h3> <!-- SALUDO AL USUARIO (COOKIE Y DESCRIPCIÓN)-->
-                <?php
-                if ($PerfilUsuario === "admin") { //PERFIL DE USUARIO
-                    ?>
+
+            <h3>¡<?php echo $saludo ?> <span class="respuesta"><?php echo $DescripcionUsuario; ?></span>!</h3> <!-- SALUDO AL USUARIO (COOKIE Y DESCRIPCIÓN)-->
+            <?php
+            if ($PerfilUsuario === "admin") { //PERFIL DE USUARIO
+                ?>
                 <h3><span class="respuesta">Eres el admin</span></h3>
                 <?php
             } else {
