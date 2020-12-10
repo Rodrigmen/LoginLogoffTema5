@@ -2,31 +2,28 @@
 /**
  * Formulario para logearte
  * 
- * @version 1.0.0
- * @since 02-11-2020
+ * @version 2.0.0
+ * @since 10-12-2020
  * @author Rodrigo Robles <rodrigo.robmin@educa.jcyl.es>
  */
-require_once 'config/confDB.php'; //requerimos una vez el archivo de configuración donde tenemos los datos necesarios para establecer la conexión con la base de datos
+require_once 'config/confDB.php'; //ARCHIVO DE CONFIGURACIÓN
 try {
-    $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); //creo el objeto PDO con las constantes iniciadas en el archivo datosBD.php
-    $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //le damos este atributo a la conexión (la configuramos) para poder utilizar las excepciones
-    //Requerimos una vez la libreria de validaciones
-    require_once 'core/libreriaValidacion.php';
+    $oConexionPDO = new PDO(DSN, USER, PASSWORD, CHARSET); 
+    $oConexionPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+    
+    require_once 'core/libreriaValidacion.php'; //ARCHIVO QUE CONTIENE LAS VALIDACIONES PARA EL FORMULARIO
 
-    //Creamos una variable boleana para definir cuando esta bien o mal rellenado el formulario
-    $entradaOK = true;
+    $entradaOK = true; //COMPROBADOR 
 
-    //Creamos dos constantes: 'REQUIRED' indica si un campo es obligatorio (tiene que tener algun valor); 'OPTIONAL' indica que un campo no es obligatorio
+    //CONSTANTES
     define('REQUIRED', 1);
     define('OPTIONAL', 0);
 
-    //Array que contiene los posibles errores de los campos del formulario
+    //ARRAY DE POSIBLES ERRORES EN EL FORMULARIO
     $aErrores = [
         'eCodigo' => null,
         'ePassword' => null
     ];
-
-
     if (isset($_POST['registrarse'])) {
         header('Location: codigoPHP/registro.php');
     }
@@ -86,26 +83,13 @@ try {
             $actualizarFecha->bindParam(':codigo', $oUsuario->T01_CodUsuario);
             $actualizarFecha->execute();
 
-            /* ----COOKIE----- */
-            //creación de la cookie (su valor se pasara a 'programa.php' para identificar el idioma en el que aparecera la información)
-            //setcookie(nombre, valor, expires, path, domain, secure, options, httponly);
-            //name->nombre de la cookie
-            //valor->el valor de la cookie
-            //expires->el tiempo en que la cookie expira (0 = cuando se cierra la sesión)  [en este caso, dura un día]
-            //path->la ruta dentro del servidor en la que la cookie estará disponible
-            //domain->el (sub)dominio al que la cookie está disponible
-            //secure->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
-            //httponly->[boolean] cuando es TRUE la cookie será accesible sólo a través del protocolo HTTP
-            //NOTA: Si quieres mantener la misma cookie por varios archivos en diferentes directorios (como 'login.php' y 'programa.php') el path (ruta) y el domain (dominio) tienen que ser el mismo
-            setcookie("language", "spanish", time()+60*60*24 , "/proyectoDWES/proyectoTema5/LoginLogoffTema5/codigoPHP");
-
             header('Location: codigoPHP/programa.php'); //redireccionamiento a la página principal 
         } else { //sino existe ningún usuario con esos datos, es incorrecto
             header('Location: login.php'); //redireccionamiento a la página principal
         }
         $buscarUsuario->closeCursor();
     } else { // si el formulario no esta correctamente rellenado (campos vacios o valores introducidos incorrectos) o no se ha rellenado nunca
-        //formulario
+        //FORMULARIO
         ?>
         <!DOCTYPE html>
         <html>
@@ -158,20 +142,14 @@ try {
                         <div class="required">
                             <label for="password">Contraseña:</label>
                             <input type="password" name="password" placeholder="Contraseña del usuario" value="<?php
-                            //si no hay error y se ha insertado un valor en el campo con anterioridad
                             if ($aErrores['ePassword'] == null && isset($_POST['password'])) {
-
-                                //se muestra dicho valor (el campo no aparece vacío si se relleno correctamente 
-                                //[en el caso de que haya que se recarge el formulario por un campo mal rellenado, asi no hay que rellenarlo desde 0])
                                 echo $_POST['password'];
                             }
                             ?>"/>
 
                             <?php
-                            //si hay error en este campo
                             if ($aErrores['ePassword'] != NULL) {
                                 echo "<div class='errores'>" .
-                                //se muestra dicho error
                                 $aErrores['ePassword'] .
                                 '</div>';
                             }
@@ -184,10 +162,10 @@ try {
                 <?php
             }
         } catch (PDOException $excepcionPDO) {
-            echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //Muestra el mesaje de error
-            echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; // Muestra el codigo del error
+            echo "<p style='color:red;'>Mensaje de error: " . $excepcionPDO->getMessage() . "</p>"; //MENSAJE DE ERROR
+            echo "<p style='color:red;'>Código de error: " . $excepcionPDO->getCode() . "</p>"; //CÓDIGO DE ERROR
         } finally {
-            unset($oConexionPDO); //destruimos el objeto  
+            unset($oConexionPDO); //DESTRUCCIÓN DE LA CONEXIÓN CON LA BASE DE DATOS
         }
         ?>
 
